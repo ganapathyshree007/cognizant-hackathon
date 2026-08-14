@@ -1,0 +1,5 @@
+{
+  "purpose": "Power BI demo reporting package for UC07",
+  "important_separation": "Fact_CMS_Cases is CMS proxy-risk data; Fact_Synthea_Safety is synthetic safety validation data. They must not be joined by member_id.",
+  "authoritative_provider_source": "Use the protected backend provider-search API for live provider retrieval; Dim_Provider_Demo is only a compact Power BI demo table."
+}

@@ -1,0 +1,15 @@
+{
+  "version": "0.1",
+  "principles": [
+    "Safety status overrides utilization risk.",
+    "Missing current clinical data never produces automatic lower-acuity clearance.",
+    "Every recommendation requires care-manager review."
+  ],
+  "rules": [
+    {"if": "safety_status in POSSIBLE_EMERGENCY", "status": "ESCALATE", "pathway": null, "reason": "Possible emergency; follow clinical escalation protocol."},
+    {"if": "safety_status in INSUFFICIENT_CLINICAL_DATA or CLINICAL_REVIEW_REQUIRED", "status": "CLINICAL_REVIEW_REQUIRED", "pathway": null, "reason": "Current clinical assessment is incomplete or requires review."},
+    {"if": "reviewer_cleared and risk_band HIGH and outpatient_visits_90d == 0", "status": "CARE_MANAGER_REVIEW", "pathway": "CARE_MANAGEMENT", "reason": "High repeat-utilization risk with no recent outpatient utilization."},
+    {"if": "reviewer_cleared and risk_band HIGH", "status": "CARE_MANAGER_REVIEW", "pathway": "PRIMARY_CARE", "reason": "High repeat-utilization risk; primary-care follow-up may be appropriate after review."},
+    {"if": "reviewer_cleared and telehealth_preferred", "status": "CARE_MANAGER_REVIEW", "pathway": "TELEHEALTH", "reason": "Telehealth is an optional pathway subject to clinical and access review."}
+  ]
+}

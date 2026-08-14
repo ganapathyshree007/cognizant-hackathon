@@ -1,0 +1,18 @@
+{
+  "name": "UC07 Navigator",
+  "dataColors": ["#14B8A6", "#38BDF8", "#2563EB", "#F59E0B", "#DC2626", "#8B5CF6", "#64748B", "#22C55E"],
+  "background": "#F6F8FB",
+  "foreground": "#0B1F3A",
+  "tableAccent": "#0F766E",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [{"show": true, "fontColor": {"solid": {"color": "#0B1F3A"}}, "fontSize": 14, "fontFamily": "Segoe UI Semibold"}],
+        "background": [{"show": true, "color": {"solid": {"color": "#FFFFFF"}}, "transparency": 0}],
+        "border": [{"show": true, "color": {"solid": {"color": "#E2E8F0"}}, "radius": 10}],
+        "visualHeader": [{"show": false}]
+      }
+    },
+    "card": {"*": {"labels": [{"fontSize": 26, "color": {"solid": {"color": "#0B1F3A"}}, "fontFamily": "Segoe UI Semibold"}]}}
+  }
+}

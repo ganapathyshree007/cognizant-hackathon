@@ -1,0 +1,53 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.env
+
+# Data files
+*.csv
+*.sqlite
+*.dll
+*.db
+*.parquet
+*.jsonl
+
+# Large data directories
+cleaned_model_inputs/
+data_improved/
+kg_rag/
+model_runtime/
+pipeline_output/
+provider_catalog/
+sources/
+step 1 2 3/
+step4_raw/
+model_artifacts/
+
+# Node
+node_modules/
+dist/
+build/
