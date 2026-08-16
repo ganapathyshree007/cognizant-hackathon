@@ -75,7 +75,7 @@ def cms_case_review(case_id: str) -> dict:
         "safety_status": "INSUFFICIENT_CURRENT_CLINICAL_DATA",
         "navigation_eligible": False,
         "recommended_action": "Obtain current clinical assessment and human care-manager/clinician review before any pathway recommendation.",
-        "notice": "CMS and Synthea populations are separate. This endpoint does not infer a Synthea safety result for a CMS case."
+        "notice": "LEGACY ENDPOINT. This safety status is not authoritative. Use /v1/safety/assess for the authoritative safety gate."
     }
 
 @app.get("/v1/synthea/safety-cases/{encounter_id}")
@@ -88,7 +88,7 @@ def synthea_safety_review(encounter_id: str) -> dict:
         raise HTTPException(404, detail={"status": "DATA_NOT_FOUND", "message": "Synthea safety case not found."})
     row = result.iloc[0].where(result.iloc[0].notna(), None).to_dict()
     row["navigation_eligible"] = False
-    row["notice"] = "Prototype safety evidence only. Human clinical review is required; no lower-acuity clearance is automated."
+    row["notice"] = "LEGACY ENDPOINT. Prototype safety evidence only. Use /v1/safety/assess for the authoritative safety gate."
     return row
 
 @app.get("/v1/providers/search")

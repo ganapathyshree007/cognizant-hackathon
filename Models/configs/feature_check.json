@@ -1,0 +1,40 @@
+{
+  "diagnosis_codes": {
+    "exists": true,
+    "missing_pct": 0.008,
+    "unique_sample": 89228
+  },
+  "BENE_ESRD_IND": {
+    "exists": true,
+    "missing_pct": 0.0,
+    "unique_values": [
+      "0",
+      "Y"
+    ]
+  },
+  "LOS": {
+    "admission_exists": true,
+    "discharge_exists": true,
+    "missing_admission": 33.295
+  },
+  "procedures": {
+    "proc_exists": true,
+    "hcpcs_exists": true,
+    "proc_missing": 61.724999999999994,
+    "hcpcs_missing": 68.152
+  },
+  "providers": {
+    "provider_npi_exists": true,
+    "provider_id_exists": true,
+    "npi_missing": 0.873,
+    "id_missing": 0.0
+  },
+  "derived": {
+    "ed_365": true,
+    "out_365": true,
+    "paid_30": true,
+    "paid_90": true,
+    "ed_30": true,
+    "ed_90": true
+  }
+}

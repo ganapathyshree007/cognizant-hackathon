@@ -1,0 +1,137 @@
+{
+  "model_purpose": "Predict repeat ED-candidate utilization strictly after the index ED day and within 90 days.",
+  "training_period": "2008-01-01 through 2009-12-31",
+  "test_period": "2010-01-01 through 2010-10-02",
+  "training_rows": 48629,
+  "test_rows": 11769,
+  "training_positive_rate": 0.13321,
+  "test_positive_rate": 0.08828,
+  "feature_policy": "Features use claim events strictly before index_date. IDs, dates, split indicator, target, and index year were excluded from model inputs.",
+  "selected_model": "xgboost",
+  "feature_columns": [
+    "days_since_previous_event",
+    "days_since_previous_ed",
+    "all_visits_30d",
+    "ed_visits_30d",
+    "outpatient_visits_30d",
+    "inpatient_visits_30d",
+    "total_paid_30d",
+    "diagnosis_coded_visits_30d",
+    "all_visits_90d",
+    "ed_visits_90d",
+    "outpatient_visits_90d",
+    "inpatient_visits_90d",
+    "total_paid_90d",
+    "diagnosis_coded_visits_90d",
+    "all_visits_365d",
+    "ed_visits_365d",
+    "outpatient_visits_365d",
+    "inpatient_visits_365d",
+    "total_paid_365d",
+    "diagnosis_coded_visits_365d",
+    "age_at_year_end",
+    "BENE_HI_CVRAGE_TOT_MONS",
+    "BENE_SMI_CVRAGE_TOT_MONS",
+    "BENE_HMO_CVRAGE_TOT_MONS",
+    "PLAN_CVRG_MOS_NUM",
+    "chronic_alzhdmta",
+    "chronic_chf",
+    "chronic_chrnkidn",
+    "chronic_cncr",
+    "chronic_copd",
+    "chronic_depressn",
+    "chronic_diabetes",
+    "chronic_ischmcht",
+    "chronic_osteoprs",
+    "chronic_ra_oa",
+    "chronic_strketia",
+    "chronic_condition_burden"
+  ],
+  "results": {
+    "logistic_regression": {
+      "test_roc_auc": 0.60903,
+      "test_pr_auc": 0.12528,
+      "test_brier_score": 0.19936,
+      "operating_threshold_top_20pct_train": 0.5789,
+      "test_flag_rate": 0.0831,
+      "test_precision": 0.14519,
+      "test_recall": 0.13667,
+      "test_f1": 0.1408
+    },
+    "xgboost": {
+      "test_roc_auc": 0.60535,
+      "test_pr_auc": 0.12548,
+      "test_brier_score": 0.08023,
+      "operating_threshold_top_20pct_train": 0.1746,
+      "test_flag_rate": 0.082,
+      "test_precision": 0.15233,
+      "test_recall": 0.14148,
+      "test_f1": 0.14671
+    }
+  },
+  "selected_operating_threshold": 0.1746,
+  "threshold_policy": "Flag the highest-risk approximately 20% of training-period ED index cases; threshold must be monitored and recalibrated after deployment.",
+  "top_feature_importance": [
+    {
+      "feature": "chronic_condition_burden",
+      "importance": 0.108429
+    },
+    {
+      "feature": "chronic_chrnkidn",
+      "importance": 0.072615
+    },
+    {
+      "feature": "diagnosis_coded_visits_90d",
+      "importance": 0.041211
+    },
+    {
+      "feature": "chronic_copd",
+      "importance": 0.035599
+    },
+    {
+      "feature": "chronic_ischmcht",
+      "importance": 0.033043
+    },
+    {
+      "feature": "chronic_depressn",
+      "importance": 0.032521
+    },
+    {
+      "feature": "all_visits_90d",
+      "importance": 0.031806
+    },
+    {
+      "feature": "outpatient_visits_90d",
+      "importance": 0.03009
+    },
+    {
+      "feature": "diagnosis_coded_visits_30d",
+      "importance": 0.028384
+    },
+    {
+      "feature": "outpatient_visits_365d",
+      "importance": 0.027754
+    },
+    {
+      "feature": "diagnosis_coded_visits_365d",
+      "importance": 0.027197
+    },
+    {
+      "feature": "chronic_diabetes",
+      "importance": 0.027062
+    },
+    {
+      "feature": "all_visits_365d",
+      "importance": 0.025248
+    },
+    {
+      "feature": "total_paid_90d",
+      "importance": 0.024899
+    },
+    {
+      "feature": "chronic_cncr",
+      "importance": 0.024033
+    }
+  ],
+  "safety_note": "This is a utilization-risk model, not an avoidability or clinical-triage model. A separate deterministic safety gate and human review are required."
+}

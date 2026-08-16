@@ -1,0 +1,23 @@
+{
+    "weights": {
+        "semantic_compatibility": 0.50,
+        "quality_score": 0.50,
+        "procedure_experience": 0.0,
+        "geographic_distance": 0.0,
+        "facility_compatibility": 0.0
+    },
+    "criteria_metadata": {
+        "semantic_compatibility": {"type": "BENEFIT", "available": true},
+        "quality_score": {"type": "BENEFIT", "available": true},
+        "procedure_experience": {"type": "BENEFIT", "available": false},
+        "geographic_distance": {"type": "COST", "available": false},
+        "facility_compatibility": {"type": "BENEFIT", "available": false}
+    },
+    "limitations": [
+        "Experience (u.Volume) UNAVAILABLE in database",
+        "Geographic Distance UNAVAILABLE (coordinates are dummy/omitted)",
+        "Facility Compatibility UNAVAILABLE (only PAC_ID exists without mapping)",
+        "Appointment Availability UNAVAILABLE",
+        "Insurance Acceptance UNAVAILABLE"
+    ]
+}

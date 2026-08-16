@@ -1,0 +1,322 @@
+{
+  "target": {
+    "column": "repeat_ed_within_90d",
+    "positives": 1039,
+    "negatives": 10730,
+    "total": 11769
+  },
+  "thresholds": {
+    "0.1": {
+      "precision": 0.10802805923616524,
+      "recall": 0.6669874879692012,
+      "f1": 0.18594043466595117,
+      "cm": {
+        "tn": 5008,
+        "fp": 5722,
+        "fn": 346,
+        "tp": 693
+      }
+    },
+    "0.1746": {
+      "precision": 0.15233160621761657,
+      "recall": 0.14148219441770934,
+      "f1": 0.1467065868263473,
+      "cm": {
+        "tn": 9912,
+        "fp": 818,
+        "fn": 892,
+        "tp": 147
+      }
+    },
+    "0.2": {
+      "precision": 0.16820276497695852,
+      "recall": 0.07025986525505294,
+      "f1": 0.09911744738628649,
+      "cm": {
+        "tn": 10369,
+        "fp": 361,
+        "fn": 966,
+        "tp": 73
+      }
+    },
+    "0.3": {
+      "precision": 0.15789473684210525,
+      "recall": 0.0028873917228103944,
+      "f1": 0.005671077504725898,
+      "cm": {
+        "tn": 10714,
+        "fp": 16,
+        "fn": 1036,
+        "tp": 3
+      }
+    },
+    "0.4": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "cm": {
+        "tn": 10730,
+        "fp": 0,
+        "fn": 1039,
+        "tp": 0
+      }
+    },
+    "0.5": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "cm": {
+        "tn": 10730,
+        "fp": 0,
+        "fn": 1039,
+        "tp": 0
+      }
+    }
+  },
+  "importance": {
+    "f36": 23.191364288330078,
+    "f27": 15.531248092651367,
+    "f13": 8.814300537109375,
+    "f29": 7.6140570640563965,
+    "f32": 7.06738805770874,
+    "f30": 6.955739498138428,
+    "f8": 6.802881717681885,
+    "f10": 6.435812950134277,
+    "f7": 6.070820331573486,
+    "f16": 5.936136722564697,
+    "f19": 5.817086219787598,
+    "f31": 5.788132190704346,
+    "f14": 5.400233268737793,
+    "f12": 5.325410842895508,
+    "f28": 5.140273571014404,
+    "f0": 4.8061957359313965,
+    "f38": 4.747441291809082,
+    "f18": 4.4582839012146,
+    "f4": 4.193208694458008,
+    "f24": 4.180646896362305,
+    "f35": 4.099113464355469,
+    "f20": 4.070323467254639,
+    "f2": 4.066450595855713,
+    "f26": 3.9961979389190674,
+    "f23": 3.9863200187683105,
+    "f1": 3.9631030559539795,
+    "f6": 3.8472986221313477,
+    "f15": 3.841334104537964,
+    "f25": 3.803025722503662,
+    "f34": 3.7574944496154785,
+    "f11": 3.698925733566284,
+    "f21": 3.660707712173462,
+    "f33": 3.5245721340179443,
+    "f22": 3.4721527099609375,
+    "f9": 3.410454511642456,
+    "f5": 3.3644566535949707,
+    "f17": 3.2158753871917725,
+    "f3": 3.076127767562866,
+    "f37": 2.754227638244629
+  },
+  "distribution": {
+    "min": 0.027101533487439156,
+    "max": 0.3754977285861969,
+    "mean": 0.11008572578430176,
+    "median": 0.1051395833492279,
+    "p90": 0.16819486618041996,
+    "p99": 0.2389306759834289,
+    "above_05": 0,
+    "above_threshold": 965
+  },
+  "errors": {
+    "fp_mean_age": 70.77750611246944,
+    "fp_mean_ed_90d": 0.26894865525672373,
+    "fp_mean_inpatient_90d": 0.12836185819070906,
+    "fn_mean_age": 74.55717488789237,
+    "fn_mean_ed_90d": 0.15022421524663676,
+    "fn_mean_inpatient_90d": 0.05829596412556054
+  },
+  "feature_quality": {
+    "days_since_previous_event": {
+      "missing": 6264,
+      "unique": 591,
+      "variance": 5208.313999224697
+    },
+    "days_since_previous_ed": {
+      "missing": 36981,
+      "unique": 884,
+      "variance": 32733.054362236468
+    },
+    "all_visits_30d": {
+      "missing": 0,
+      "unique": 8,
+      "variance": 0.6760625657522471
+    },
+    "ed_visits_30d": {
+      "missing": 0,
+      "unique": 3,
+      "variance": 0.0464777511150643
+    },
+    "outpatient_visits_30d": {
+      "missing": 0,
+      "unique": 7,
+      "variance": 0.6153744735227049
+    },
+    "inpatient_visits_30d": {
+      "missing": 0,
+      "unique": 5,
+      "variance": 0.04744400377362099
+    },
+    "total_paid_30d": {
+      "missing": 0,
+      "unique": 938,
+      "variance": 8673392.175957546
+    },
+    "diagnosis_coded_visits_30d": {
+      "missing": 0,
+      "unique": 8,
+      "variance": 0.6760625657522471
+    },
+    "all_visits_90d": {
+      "missing": 0,
+      "unique": 15,
+      "variance": 2.620540956973014
+    },
+    "ed_visits_90d": {
+      "missing": 0,
+      "unique": 5,
+      "variance": 0.14120298139502396
+    },
+    "outpatient_visits_90d": {
+      "missing": 0,
+      "unique": 15,
+      "variance": 2.3526578434057335
+    },
+    "inpatient_visits_90d": {
+      "missing": 0,
+      "unique": 7,
+      "variance": 0.1587578094521983
+    },
+    "total_paid_90d": {
+      "missing": 0,
+      "unique": 2180,
+      "variance": 27111408.184527278
+    },
+    "diagnosis_coded_visits_90d": {
+      "missing": 0,
+      "unique": 15,
+      "variance": 2.620545711142044
+    },
+    "all_visits_365d": {
+      "missing": 0,
+      "unique": 40,
+      "variance": 20.386192326863807
+    },
+    "ed_visits_365d": {
+      "missing": 0,
+      "unique": 9,
+      "variance": 0.5444272588312737
+    },
+    "outpatient_visits_365d": {
+      "missing": 0,
+      "unique": 35,
+      "variance": 17.850286126032376
+    },
+    "inpatient_visits_365d": {
+      "missing": 0,
+      "unique": 11,
+      "variance": 0.7548954688250628
+    },
+    "total_paid_365d": {
+      "missing": 0,
+      "unique": 4715,
+      "variance": 130204100.96161741
+    },
+    "diagnosis_coded_visits_365d": {
+      "missing": 0,
+      "unique": 40,
+      "variance": 20.38571286001161
+    },
+    "age_at_year_end": {
+      "missing": 13,
+      "unique": 77,
+      "variance": 172.40256890114264
+    },
+    "BENE_HI_CVRAGE_TOT_MONS": {
+      "missing": 13,
+      "unique": 13,
+      "variance": 1.2084583384959746
+    },
+    "BENE_SMI_CVRAGE_TOT_MONS": {
+      "missing": 13,
+      "unique": 13,
+      "variance": 1.5944412448163698
+    },
+    "BENE_HMO_CVRAGE_TOT_MONS": {
+      "missing": 13,
+      "unique": 13,
+      "variance": 27.852905100166332
+    },
+    "PLAN_CVRG_MOS_NUM": {
+      "missing": 13,
+      "unique": 13,
+      "variance": 22.496769932935813
+    },
+    "chronic_alzhdmta": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.23636742180802972
+    },
+    "chronic_chf": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.24633195686948572
+    },
+    "chronic_chrnkidn": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.23591909980719794
+    },
+    "chronic_cncr": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.12446197199924673
+    },
+    "chronic_copd": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.21015962346644043
+    },
+    "chronic_depressn": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.24500354962555523
+    },
+    "chronic_diabetes": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.2173386529015022
+    },
+    "chronic_ischmcht": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.1902497037599878
+    },
+    "chronic_osteoprs": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.21224672224810273
+    },
+    "chronic_ra_oa": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.2093023836849422
+    },
+    "chronic_strketia": {
+      "missing": 13,
+      "unique": 2,
+      "variance": 0.08499849623806877
+    },
+    "chronic_condition_burden": {
+      "missing": 13,
+      "unique": 12,
+      "variance": 5.715553557651278
+    }
+  }
+}
