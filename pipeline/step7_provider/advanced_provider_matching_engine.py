@@ -4,6 +4,7 @@ import json
 import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import sqlite3
 
 class AdvancedProviderMatchingEngine:
     def __init__(self, providers_df, config_path=None):
@@ -103,7 +104,7 @@ class AdvancedProviderMatchingEngine:
         return closeness * 100.0
 
 
-    def match(self, patient_state):
+    def match(self, patient_state, db_path=None):
         # 1. Hard Eligibility Filters
         safety = patient_state.get('Safety Status')
         req_specialty = patient_state.get('Required Specialty')
@@ -136,27 +137,46 @@ class AdvancedProviderMatchingEngine:
         
         options = []
         for rank, (_, row) in enumerate(top5.iterrows(), 1):
+            npi = row.get('NPI', 'UNKNOWN')
+            
+            # Fetch supporting information from DB if path is provided
+            facilities_list = []
+            utilization_list = []
+            
+            if db_path and os.path.exists(db_path) and str(npi).isdigit():
+                try:
+                    conn = sqlite3.connect(db_path)
+                    
+                    # Get facilities (CCNs)
+                    fac_df = pd.read_sql_query("SELECT CCN FROM facilities WHERE NPI = ?", conn, params=(int(npi),))
+                    if not fac_df.empty:
+                        facilities_list = fac_df['CCN'].dropna().unique().tolist()
+                        
+                    # Get Utilization (Categories and Counts)
+                    util_df = pd.read_sql_query("SELECT Procedure_Category, Ordinal_Count FROM utilization WHERE NPI = ?", conn, params=(int(npi),))
+                    if not util_df.empty:
+                        utilization_list = [f"{r['Procedure_Category']}: {r['Ordinal_Count']}" for _, r in util_df.iterrows()]
+                        
+                    conn.close()
+                except Exception as e:
+                    print(f"Error fetching supporting info for {npi}: {e}")
+            
             options.append({
                 "Rank": rank,
-                "NPI": row.get('NPI', 'UNKNOWN'),
+                "NPI": npi,
                 "PAC_ID": row.get('PAC_ID', 'UNKNOWN'),
                 "Name": row.get('Name', 'UNKNOWN'),
                 "Specialty": row.get('Specialty', 'UNKNOWN'),
-                "Procedure_Categories": "UNAVAILABLE", # As audited
-                "Procedure_Count": "UNAVAILABLE", # As audited
+                "Procedure_Volumes": utilization_list if utilization_list else ["No procedure volume data available"],
                 "Quality_Score": round(row.get('Norm_Quality', 0), 2),
-                "MIPS_Score": "UNAVAILABLE", # Unified into Quality_Score in real query
-                "Facility": "UNAVAILABLE", # As audited
-                "City": "UNAVAILABLE", # Not pulled in query
-                "State": "UNAVAILABLE", # Not pulled in query
-                "ZIP": "UNAVAILABLE", # Not pulled in query
+                "Facilities_CCN": facilities_list if facilities_list else ["No facility affiliation data available"],
                 "Semantic_Compatibility": round(row['Semantic_Score'], 2),
                 "TOPSIS_Score": round(row['TOPSIS_Score'], 2),
-                "Criteria_Used": ["Semantic Compatibility", "Quality Score"],
+                "Criteria_Used": ["Semantic Compatibility (50%)", "Quality Score (50%)"],
                 "Score_Breakdown": f"Semantic:{round(row['Semantic_Score'], 2)} | Quality:{round(row.get('Norm_Quality', 0), 2)}",
                 "Limitations": self.config.get('limitations', []),
                 "Human_Review_Required": "REQUIRED",
-                "Provenance": f"REAL DATA: NPI={row.get('NPI', 'UNKNOWN')}, PAC_ID={row.get('PAC_ID', 'UNKNOWN')}, Source=Cognizant Provider Dataset"
+                "Provenance": f"REAL DATA: NPI={npi}, PAC_ID={row.get('PAC_ID', 'UNKNOWN')}, Source=Cognizant Provider Dataset"
             })
             
         return {"Status": "SUCCESS", "Reason": "Advanced TOPSIS ranking applied successfully.", "Options": options}

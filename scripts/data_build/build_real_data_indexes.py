@@ -54,20 +54,18 @@ def build_provider_db():
         
         df = chunk[list(cols_to_keep.keys())].rename(columns=cols_to_keep)
         
-        # Adding dummy LAT/LON because exact geographic lookup API isn't present in this file
-        if 'LAT' not in df.columns: df['LAT'] = 42.36
-        if 'LON' not in df.columns: df['LON'] = -71.05
+        # Removing dummy LAT/LON assignment as per audit
             
         df.to_sql('dac', conn, if_exists='append', index=False)
         
     print("Loading Facility Affiliations...")
     try:
-        for chunk in pd.read_csv('sources/Facility_Affiliation.csv', chunksize=100000, low_memory=False, on_bad_lines='skip'):
+        for chunk in pd.read_csv('sources/Facility_Affiliations.csv', chunksize=100000, low_memory=False, on_bad_lines='skip'):
             cols_to_keep = {}
             for c in chunk.columns:
                 c_low = c.strip().lower()
                 if c_low == 'ind_pac_id': cols_to_keep[c] = 'PAC_ID'
-                elif c_low == 'facility_id' or c_low == 'ccn': cols_to_keep[c] = 'CCN'
+                elif c_low == 'facility_id' or c_low == 'ccn' or c_low == 'facility affiliations certification number': cols_to_keep[c] = 'CCN'
             if cols_to_keep:
                 df = chunk[list(cols_to_keep.keys())].rename(columns=cols_to_keep)
                 df.to_sql('facilities', conn, if_exists='append', index=False)
@@ -90,19 +88,17 @@ def build_provider_db():
 
     print("Loading Utilization...")
     try:
-        for chunk in pd.read_csv('sources/Utilization.csv', chunksize=100000, low_memory=False, on_bad_lines='skip'):
+        for chunk in pd.read_csv('sources/Utilization_3.csv', chunksize=100000, low_memory=False, on_bad_lines='skip'):
             cols_to_keep = {}
             for c in chunk.columns:
                 c_low = c.strip().lower()
                 if c_low == 'npi': cols_to_keep[c] = 'NPI'
-                elif c_low == 'count': cols_to_keep[c] = 'Volume'
+                elif c_low == 'procedure_category': cols_to_keep[c] = 'Procedure_Category'
+                elif c_low == 'count': cols_to_keep[c] = 'Ordinal_Count'
             if cols_to_keep:
                 df = chunk[list(cols_to_keep.keys())].rename(columns=cols_to_keep)
-                # Ensure Volume is numeric, coerce errors, drop na, and group by NPI to sum if multiple rows exist
-                if 'Volume' in df.columns:
-                    df['Volume'] = pd.to_numeric(df['Volume'], errors='coerce')
-                    df = df.dropna(subset=['Volume'])
-                    df = df.groupby('NPI', as_index=False)['Volume'].sum()
+                # Preserve Ordinal_Count as string/object. Drop rows where NPI or Count is null.
+                df = df.dropna(subset=['NPI', 'Ordinal_Count'])
                 df.to_sql('utilization', conn, if_exists='append', index=False)
     except Exception as e:
         print(f"Skipping Utilization: {e}")
@@ -121,5 +117,5 @@ def build_provider_db():
     print("provider_index.db built successfully.")
 
 if __name__ == "__main__":
-    build_patient_db()
+    # build_patient_db()
     build_provider_db()

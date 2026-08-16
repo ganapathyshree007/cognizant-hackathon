@@ -190,7 +190,8 @@ def evaluate_patient(req: PatientEvalRequest):
         "Clinician Cleared": False 
     }
     
-    provider_result = provider_engine.match(patient_match_state)
+    db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/provider_index.db'))
+    provider_result = provider_engine.match(patient_match_state, db_path=db_path)
     
     # Append provenance to the top options is now natively handled by AdvancedProviderMatchingEngine
 
