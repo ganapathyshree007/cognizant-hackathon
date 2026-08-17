@@ -148,9 +148,11 @@ class AdvancedProviderMatchingEngine:
                     conn = sqlite3.connect(db_path)
                     
                     # Get facilities (CCNs)
-                    fac_df = pd.read_sql_query("SELECT CCN FROM facilities WHERE NPI = ?", conn, params=(int(npi),))
-                    if not fac_df.empty:
-                        facilities_list = fac_df['CCN'].dropna().unique().tolist()
+                    pac_id = row.get('PAC_ID')
+                    if pd.notna(pac_id) and str(pac_id).isdigit():
+                        fac_df = pd.read_sql_query("SELECT CCN FROM facilities WHERE PAC_ID = ?", conn, params=(int(pac_id),))
+                        if not fac_df.empty:
+                            facilities_list = fac_df['CCN'].dropna().unique().tolist()
                         
                     # Get Utilization (Categories and Counts)
                     util_df = pd.read_sql_query("SELECT Procedure_Category, Ordinal_Count FROM utilization WHERE NPI = ?", conn, params=(int(npi),))

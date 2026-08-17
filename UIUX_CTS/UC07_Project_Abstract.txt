@@ -1,0 +1,56 @@
+# Project Abstract: Avoidable Emergency Department Utilization Navigator
+
+**Use Case:** UC07 | **Domain:** Care Management | **Track:** US Payer Agentic AI
+
+---
+
+## Problem Statement
+
+Emergency department (ED) visits are among the most expensive sites of care in the US healthcare system, and a meaningful share of them could have been addressed through primary care, urgent care, or telehealth — if the member had known that option existed or had a clear path to it. Payers sit on the claims data needed to detect these patterns, but today that data is used almost exclusively for retrospective cost reporting, not for proactive, member-safe navigation.
+
+The central challenge is not detection — pattern-spotting in claims data is a solved problem technically. The challenge is doing it **without ever implying that a real emergency should have been avoided or blocked**. Any system in this space that reads as gatekeeping, blame, or after-the-fact judgment fails the use case, regardless of its technical accuracy. This project treats that constraint as a first-class design requirement, not a disclaimer added after the fact.
+
+## Objective
+
+Build a care-manager-facing prototype that:
+1. Identifies members with recurring patterns of potentially avoidable ED utilization, using a validated clinical classification method rather than an invented heuristic.
+2. Explains each flagged pattern in plain, defensible language a non-technical care manager can act on immediately.
+3. Recommends a specific, lower-acuity next step — primary care follow-up, urgent care, telehealth, or a care-management outreach call — tied to the member's actual pattern.
+4. Surfaces aggregate trends for management to quantify cost-avoidance opportunity and prioritize outreach programs.
+
+At every layer, the system is designed to support forward-looking navigation, never retrospective judgment of a specific visit.
+
+## Approach
+
+**Labeling:** ED claims are classified using the NYU ED Algorithm, a published, peer-reviewed probability-based method that buckets visits into emergent, non-emergent, avoidable-preventable, injury, and behavioral-health categories. Using an established clinical method — rather than a project-specific heuristic — is what makes the "avoidable" label defensible in front of a payer audience.
+
+**Pattern detection:** Member-level features (visit frequency, diagnosis mix, time-of-day/day-of-week patterns, prior primary-care engagement, community-level social risk from CDC PLACES) feed a lightweight classifier that scores each member's overall utilization pattern, not individual visits in isolation. Scoring patterns rather than single events keeps the framing correctly forward-looking.
+
+**Reasoning and navigation:** An LLM layer converts the structured risk score and contributing factors into a plain-language explanation and a specific recommended next step. This layer operates under an explicit safety instruction set that prohibits any output implying a past visit was inappropriate, and requires every recommendation to be framed as a future option rather than a correction.
+
+**Delivery:** Three role-based views — Care Manager (individual queue and case actions), Provider (patients attributed to that PCP), and Management (aggregate trends and cost-avoidance estimates) — deliver the output without ever surfacing evaluative language to the member directly.
+
+## Data Sources
+
+- CMS Synthetic Medicare Enrollment, Fee-for-Service Claims & Prescription Drug Event data
+- CMS Hospital Readmissions Reduction Program data (utilization context)
+- CMS Provider Data Catalog (local care-option alternatives)
+- CDC PLACES (community-level health and access indicators)
+
+## Expected Outcomes
+
+A working prototype demonstrating an end-to-end pipeline from raw synthetic claims to a care-manager-ready recommendation queue, with:
+- A transparent, published-method basis for every "avoidable" label (auditable, not a black box)
+- Plain-language, explainable outputs suitable for a non-clinical care management team
+- A quantified estimate of cost-avoidance opportunity for the management view
+- A documented safety framework showing exactly how the system avoids discouraging genuine emergency care
+
+## Key Constraints and Limitations (stated up front)
+
+- The classification is retrospective and claims-based; it does not and cannot assess real-time clinical severity at the moment of a visit, and the prototype does not claim to.
+- "Avoidable" is a probabilistic clinical classification, not a certainty — outputs are framed as care-management signals for follow-up, not diagnostic determinations.
+- Synthetic data limits the fidelity of geographic and demographic patterns; findings demonstrate the pipeline's validity, not real-world prevalence rates.
+
+## Impact
+
+For a payer, this pipeline offers a defensible, explainable way to direct care-management resources toward members who would benefit from better navigation — improving member experience and reducing avoidable cost — while maintaining a strict, auditable boundary against anything that could be read as denying or second-guessing legitimate emergency care.
