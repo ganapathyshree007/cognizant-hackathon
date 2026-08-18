@@ -12,6 +12,39 @@ import { Session } from "@supabase/supabase-js";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "../components/ui/toaster";
 
+// Global fetch override to rewrite API calls in production
+if (typeof window !== "undefined") {
+  const originalFetch = window.fetch;
+  window.fetch = function (input: RequestInfo | URL, init?: RequestInit) {
+    let url = "";
+    if (typeof input === "string") {
+      url = input;
+    } else if (input instanceof URL) {
+      url = input.toString();
+    } else if (input && typeof input === "object" && "url" in input) {
+      url = (input as Request).url;
+    }
+
+    // Rewrite relative api calls if we are deployed to production (not localhost)
+    if (
+      url.startsWith("/api") &&
+      window.location.hostname !== "localhost" &&
+      window.location.hostname !== "127.0.0.1"
+    ) {
+      const targetBase = "https://carepath-backend-uv06.onrender.com";
+      const targetUrl = targetBase + (url.startsWith("/") ? url : "/" + url);
+      if (typeof input === "string") {
+        return originalFetch(targetUrl, init);
+      } else if (input instanceof URL) {
+        return originalFetch(new URL(targetUrl), init);
+      } else {
+        return originalFetch(new Request(targetUrl, input as Request), init);
+      }
+    }
+    return originalFetch(input, init);
+  };
+}
+
 type AuthContextType = {
   session: Session | null;
   patientToken: string | null;
