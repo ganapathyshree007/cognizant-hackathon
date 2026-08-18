@@ -1,6 +1,14 @@
 import os
-from supabase import create_client, Client
-from dotenv import load_dotenv
+try:
+    from supabase import create_client, Client
+except ImportError:
+    create_client = None
+    Client = object
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    def load_dotenv(*args, **kwargs):
+        return False
 
 load_dotenv()
 
@@ -10,7 +18,7 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY")
 
 def get_supabase() -> Client:
-    if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
+    if create_client is None or not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
         print("WARNING: SUPABASE_URL or SUPABASE_SERVICE_KEY not set. Operating in mock/degraded mode if not handled.")
         # We can still return a client if they are set
         return None

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "safety-red-override",
+    "title": "Safety escalation policy",
+    "tags": ["RED", "safety", "emergency", "pathway"],
+    "content": "A RED safety status takes priority over every utilization-risk score, pathway suggestion, and provider match. Do not present routine scheduling as an alternative. Escalate according to the organization's emergency evaluation process and document the care-manager action."
+  },
+  {
+    "id": "safety-yellow-review",
+    "title": "Urgent review policy",
+    "tags": ["YELLOW", "safety", "urgent", "pathway"],
+    "content": "A YELLOW safety status requires timely human clinical review before routine navigation or scheduling. The care manager may document outreach and escalation, but must not represent a routine provider recommendation as a clinical clearance."
+  },
+  {
+    "id": "green-priority-follow-up",
+    "title": "Priority outpatient follow-up workflow",
+    "tags": ["GREEN", "HIGH", "P3", "outpatient", "follow-up"],
+    "content": "For GREEN safety status with HIGH historical utilization risk, coordinate priority outpatient follow-up. Review the documented risk drivers, confirm the member's needs and preferences, offer eligible provider options, and obtain human approval before scheduling. Historical risk does not establish clinical urgency or diagnose a condition."
+  },
+  {
+    "id": "routine-navigation",
+    "title": "Routine navigation workflow",
+    "tags": ["GREEN", "MEDIUM", "LOW", "P4", "P5", "telehealth", "primary care"],
+    "content": "For GREEN safety status with MEDIUM or LOW historical utilization risk, consider routine outpatient follow-up, preventive care management, primary care, urgent care, or telehealth according to the approved pathway and member preference. Confirm provider network and appointment availability outside this prototype before communicating a booking."
+  },
+  {
+    "id": "incomplete-assessment",
+    "title": "Incomplete current assessment policy",
+    "tags": ["PENDING", "assessment", "safety"],
+    "content": "When the safety assessment is PENDING, collect the required current clinical information before presenting a finalized care pathway. The system must state that the assessment is incomplete rather than infer missing findings."
+  },
+  {
+    "id": "provider-prototype-limits",
+    "title": "Provider directory limitations",
+    "tags": ["provider", "network", "availability", "appointment"],
+    "content": "Provider matches are decision-support options ranked from available prototype directory data. Real-time appointment availability, network participation, accessibility, and patient preference require independent verification by a human care manager."
+  },
+  {
+    "id": "documentation-audit",
+    "title": "Human review and documentation policy",
+    "tags": ["audit", "approve", "modify", "reject", "escalate"],
+    "content": "A care manager must approve, modify, reject, or escalate every final navigation action. Preserve the system recommendation, the human decision, rationale, and the sources used by any AI explanation. Do not claim that an intervention prevented an emergency-department visit."
+  }
+]

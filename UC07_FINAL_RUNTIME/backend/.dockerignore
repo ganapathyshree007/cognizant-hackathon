@@ -1,0 +1,67 @@
+# ── Python cache ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# ── Virtual environments ──────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Secrets — NEVER bake these into the image ─────────────────
+.env
+.env.*
+!.env.example
+
+# ── SQLite databases — ALL excluded; mounted as volumes locally,
+#    served from persistent disk / object storage on Render ─────
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# ── Dev/test/migration scripts not needed at runtime ──────────
+test_*.py
+*_test.py
+baseline_test.py
+check_*.py
+debug_*.py
+migrate_*.py
+create_*.py
+list_*.py
+run_e2e*.py
+init_*.py
+patch.py
+
+# ── SQL migration files (only needed for initial setup) ───────
+*.sql
+
+# ── Test output files ─────────────────────────────────────────
+test_out.txt
+test_step7_out.txt
+*.png
+failure.png
+
+# ── Node artefacts ────────────────────────────────────────────
+node_modules/
+npm-debug.log
+
+# ── IDE and OS noise ──────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+
+# ── Docker itself ─────────────────────────────────────────────
+Dockerfile
+.dockerignore
+
+# ── Explicitly INCLUDED (not excluded) ────────────────────────
+# config/          ← UC07_STEP7_ADVANCED_MATCHING_CONFIG.json lives here
+# models/          ← UC07_SYNTHEA_STEP4_BEST_MODEL.joblib lives here
+# knowledge/       ← care_navigation_policies.json lives here

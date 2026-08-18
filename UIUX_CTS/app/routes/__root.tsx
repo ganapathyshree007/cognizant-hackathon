@@ -10,6 +10,7 @@ import { useEffect, useState, createContext, useContext } from "react";
 import { supabase } from "../lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "../components/ui/toaster";
 
 type AuthContextType = {
   session: Session | null;
@@ -176,6 +177,7 @@ function RootComponent() {
     <AuthContext.Provider value={{ session, patientToken, role: activeRole, loading }}>
       <QueryClientProvider client={queryClient}>
         <Outlet />
+        <Toaster />
       </QueryClientProvider>
     </AuthContext.Provider>
   );

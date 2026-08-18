@@ -38,8 +38,19 @@ function PatientLogin() {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.detail || "Patient ID not found. Please check your ID and try again.");
+        let detail = "Unable to connect to the care service.";
+        try {
+          const data = await res.json();
+          detail = data.detail || detail;
+        } catch(e) {}
+        
+        if (res.status === 404) {
+          throw new Error(detail || "Patient ID not found. Please check your ID and try again.");
+        } else if (res.status >= 500) {
+          throw new Error(detail || "Unable to access patient records. Please try again.");
+        } else {
+          throw new Error(detail);
+        }
       }
 
       const data = await res.json();

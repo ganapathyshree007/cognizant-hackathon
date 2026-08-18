@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutGrid, Users, Building2, PhoneCall, ClipboardList, Menu, ShieldCheck } from "lucide-react";
+import { LayoutGrid, Users, Building2, PhoneCall, ClipboardList, Menu, ShieldCheck, BarChart3, ShieldAlert } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
@@ -11,6 +11,8 @@ const nav = [
   { title: "Care Assessment", to: "/care-assessment", icon: ClipboardList, exact: false },
   { title: "Appointments", to: "/follow-ups", icon: PhoneCall, exact: false },
   { title: "Providers", to: "/providers", icon: Building2, exact: false },
+  { title: "Analytics", to: "/analytics", icon: BarChart3, exact: false },
+  { title: "Safety Framework", to: "/safety", icon: ShieldAlert, exact: false },
 ] as const;
 
 const patientNav = [
@@ -163,11 +165,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
 }
 
-export function PageHeader({ title, subtitle }: { title: string; subtitle: string }) {
+export function PageHeader({ title, subtitle, actions }: { title: string; subtitle: string; actions?: ReactNode }) {
   return (
-    <div className="mb-10">
-      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-      <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>
+    <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>
+      </div>
+      {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
     </div>
   );
 }

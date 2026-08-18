@@ -10,12 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as CareAssessmentRouteImport } from './routes/care-assessment'
 import { Route as FollowUpsRouteImport } from './routes/follow-ups'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MyCareRouteImport } from './routes/my-care'
 import { Route as PatientLoginRouteImport } from './routes/patient-login'
 import { Route as ProvidersRouteImport } from './routes/providers'
+import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as CallReviewPatientIdRouteImport } from './routes/call-review/$patientId'
 import { Route as PatientsIndexRouteImport } from './routes/patients/index'
 import { Route as PatientsPatientIdRouteImport } from './routes/patients/$patientId'
@@ -23,6 +25,11 @@ import { Route as PatientsPatientIdRouteImport } from './routes/patients/$patien
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareAssessmentRoute = CareAssessmentRouteImport.update({
@@ -55,6 +62,11 @@ const ProvidersRoute = ProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SafetyRoute = SafetyRouteImport.update({
+  id: '/safety',
+  path: '/safety',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CallReviewPatientIdRoute = CallReviewPatientIdRouteImport.update({
   id: '/call-review/$patientId',
   path: '/call-review/$patientId',
@@ -73,24 +85,28 @@ const PatientsPatientIdRoute = PatientsPatientIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/care-assessment': typeof CareAssessmentRoute
   '/follow-ups': typeof FollowUpsRoute
   '/login': typeof LoginRoute
   '/my-care': typeof MyCareRoute
   '/patient-login': typeof PatientLoginRoute
   '/providers': typeof ProvidersRoute
+  '/safety': typeof SafetyRoute
   '/call-review/$patientId': typeof CallReviewPatientIdRoute
   '/patients/$patientId': typeof PatientsPatientIdRoute
   '/patients/': typeof PatientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/care-assessment': typeof CareAssessmentRoute
   '/follow-ups': typeof FollowUpsRoute
   '/login': typeof LoginRoute
   '/my-care': typeof MyCareRoute
   '/patient-login': typeof PatientLoginRoute
   '/providers': typeof ProvidersRoute
+  '/safety': typeof SafetyRoute
   '/call-review/$patientId': typeof CallReviewPatientIdRoute
   '/patients/$patientId': typeof PatientsPatientIdRoute
   '/patients': typeof PatientsIndexRoute
@@ -98,12 +114,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/care-assessment': typeof CareAssessmentRoute
   '/follow-ups': typeof FollowUpsRoute
   '/login': typeof LoginRoute
   '/my-care': typeof MyCareRoute
   '/patient-login': typeof PatientLoginRoute
   '/providers': typeof ProvidersRoute
+  '/safety': typeof SafetyRoute
   '/call-review/$patientId': typeof CallReviewPatientIdRoute
   '/patients/$patientId': typeof PatientsPatientIdRoute
   '/patients/': typeof PatientsIndexRoute
@@ -112,36 +130,42 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/analytics'
     | '/care-assessment'
     | '/follow-ups'
     | '/login'
     | '/my-care'
     | '/patient-login'
     | '/providers'
+    | '/safety'
     | '/call-review/$patientId'
     | '/patients/$patientId'
     | '/patients/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/analytics'
     | '/care-assessment'
     | '/follow-ups'
     | '/login'
     | '/my-care'
     | '/patient-login'
     | '/providers'
+    | '/safety'
     | '/call-review/$patientId'
     | '/patients/$patientId'
     | '/patients'
   id:
     | '__root__'
     | '/'
+    | '/analytics'
     | '/care-assessment'
     | '/follow-ups'
     | '/login'
     | '/my-care'
     | '/patient-login'
     | '/providers'
+    | '/safety'
     | '/call-review/$patientId'
     | '/patients/$patientId'
     | '/patients/'
@@ -149,12 +173,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   CareAssessmentRoute: typeof CareAssessmentRoute
   FollowUpsRoute: typeof FollowUpsRoute
   LoginRoute: typeof LoginRoute
   MyCareRoute: typeof MyCareRoute
   PatientLoginRoute: typeof PatientLoginRoute
   ProvidersRoute: typeof ProvidersRoute
+  SafetyRoute: typeof SafetyRoute
   CallReviewPatientIdRoute: typeof CallReviewPatientIdRoute
   PatientsPatientIdRoute: typeof PatientsPatientIdRoute
   PatientsIndexRoute: typeof PatientsIndexRoute
@@ -167,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/care-assessment': {
@@ -211,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProvidersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/safety': {
+      id: '/safety'
+      path: '/safety'
+      fullPath: '/safety'
+      preLoaderRoute: typeof SafetyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/call-review/$patientId': {
       id: '/call-review/$patientId'
       path: '/call-review/$patientId'
@@ -237,12 +277,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
   CareAssessmentRoute: CareAssessmentRoute,
   FollowUpsRoute: FollowUpsRoute,
   LoginRoute: LoginRoute,
   MyCareRoute: MyCareRoute,
   PatientLoginRoute: PatientLoginRoute,
   ProvidersRoute: ProvidersRoute,
+  SafetyRoute: SafetyRoute,
   CallReviewPatientIdRoute: CallReviewPatientIdRoute,
   PatientsPatientIdRoute: PatientsPatientIdRoute,
   PatientsIndexRoute: PatientsIndexRoute,
