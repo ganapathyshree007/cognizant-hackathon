@@ -186,9 +186,11 @@ def get_real_patient_features(patient_id: str, encounter_id: str) -> pd.DataFram
             print("Supabase not configured.")
             return None
             
+        response = None
         if encounter_id and encounter_id != "UNKNOWN":
             response = supabase.table("backend_files").select("*").eq("PATIENT_ID", patient_id).eq("ENCOUNTER_ID", encounter_id).limit(1).execute()
-        else:
+            
+        if not response or not response.data:
             response = supabase.table("backend_files").select("*").eq("PATIENT_ID", patient_id).order("INDEX_TIMESTAMP", desc=True).limit(1).execute()
             
         if response.data:
