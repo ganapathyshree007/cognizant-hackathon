@@ -5,8 +5,6 @@
 
 The engine replaces manual, fragmented patient intake systems with a streamlined, multi-step pipeline powered by machine learning and multi-criteria decision algorithms.
 
-
-
 ## Architecture
 
 The orchestration engine follows a rigorous, multi-step pipeline to guarantee safety, determinism, and explainability:
@@ -40,9 +38,7 @@ The orchestration engine follows a rigorous, multi-step pipeline to guarantee sa
 - `/tests/`: Standalone end-to-end and component tests for the various engines.
 - `/reports/`: Comprehensive audits, implementation plans, and feasibility analyses documenting the complete data lineage and architectural decisions.
 
-
 ## Setup & Execution
-
 
 ### Prerequisites
 - Python 3.9+
@@ -56,7 +52,6 @@ python api.py
 ```
 
 *This launches the FastAPI application, bridging the orchestration pipeline with the frontend or external API gateways.*
-
 
 ## Data Provenance & Safety
 - **No Hallucination**: The system utilizes rigid, deterministic fallbacks and does NOT train supervised models on fake outcome data. 
