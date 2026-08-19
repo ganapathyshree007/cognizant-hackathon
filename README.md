@@ -40,7 +40,9 @@ The orchestration engine follows a rigorous, multi-step pipeline to guarantee sa
 - `/tests/`: Standalone end-to-end and component tests for the various engines.
 - `/reports/`: Comprehensive audits, implementation plans, and feasibility analyses documenting the complete data lineage and architectural decisions.
 
+
 ## Setup & Execution
+
 
 ### Prerequisites
 - Python 3.9+
@@ -50,8 +52,11 @@ The orchestration engine follows a rigorous, multi-step pipeline to guarantee sa
 ```bash
 cd backend
 python api.py
+
 ```
+
 *This launches the FastAPI application, bridging the orchestration pipeline with the frontend or external API gateways.*
+
 
 ## Data Provenance & Safety
 - **No Hallucination**: The system utilizes rigid, deterministic fallbacks and does NOT train supervised models on fake outcome data. 
