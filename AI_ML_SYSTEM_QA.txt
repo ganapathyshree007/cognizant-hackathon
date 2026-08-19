@@ -1,0 +1,209 @@
+================================================================================
+           CAREPATH SYSTEM Q&A: ML MODEL, RAG, LLM & SAFETY INTEGRATION
+================================================================================
+
+--------------------------------------------------------------------------------
+1. ML Model (Ganapathy's Part)
+--------------------------------------------------------------------------------
+
+Q1: Is the LightGBM model actually calibrated (e.g., via CalibratedClassifierCV 
+    or Platt scaling), or is "calibrated" just a name label?
+A1: Yes, it is actually calibrated. The saved model artifact 
+    (`UC07_SYNTHEA_STEP4_BEST_MODEL.joblib`) is wrapped in scikit-learn's 
+    `CalibratedClassifierCV` utilizing `method='isotonic'` with `cv='prefit'`. 
+    This applies isotonic regression calibration on top of the raw prediction 
+    scores output by the underlying LightGBM model (`LGBMClassifier`), transforming 
+    the model's logits into calibrated probabilities.
+
+Q2: What's the train/test/validation split strategy — is there any data leakage 
+    between historical features and the outcome label?
+A2: 
+    * Split Strategy: Chronological (rolling temporal) based on the 
+      `INDEX_TIMESTAMP` of emergency encounters to mimic real-world deployment:
+      - Train: 1919-06-06 to 2019-12-30 (1,833 rows, 746 patients, 335 positives)
+      - Validation: 2020-01-08 to 2020-12-31 (135 rows, 109 patients, 25 positives)
+      - Test: 2021-01-01 to 2021-08-20 (87 rows, 71 patients, 16 positives)
+    * Leakage Control: Strict controls are in place. All lookback utilization and 
+      cost features end strictly before the `INDEX_TIMESTAMP` (the index date). 
+      The target-window encounters, the index encounter itself, patient ID, and 
+      encounter ID are excluded from model features. 
+    * Overlap Note: Since it is chronological, patients can recur in later time 
+      splits (e.g., 49 patients overlap between train and test splits). This is 
+      appropriate for scoring known historical patients but is not a patient-disjoint 
+      estimate.
+
+Q3: Was the model evaluated with AUROC, AUPRC, calibration curves (Brier score), 
+    not just accuracy?
+A3: Yes. As detailed in the `MODEL_DEVELOPMENT_REPORT.md`, evaluation included 
+    ROC-AUC (AUROC), PR-AUC (AUPRC), F1-Score, Recall, Precision, Brier score, 
+    and Accuracy. In the 2021 test period, LightGBM/XGBoost achieved:
+    - ROC-AUC: ~0.98
+    - PR-AUC: ~0.96
+    - Brier Score: 0.0325 (indicating strong probability calibration)
+
+Q4: Are the 44 features documented with a data dictionary — do we know exactly 
+    what each one means and how it was engineered?
+A4: Yes. The 44 features represent historical aggregations of claims and EHR data:
+    - Demographic variables: `age_at_index`, `gender`, `race`, `ethnicity`, 
+      `marital_status`, `state`.
+    - Window counts (30, 90, 365 days): count of all encounters, plus count 
+      subdivided by class (`emergency`, `inpatient`, `outpatient`, `ambulatory`, 
+      `urgent_care`, `wellness`).
+    - Cost features: cumulative encounter claim costs in 30, 90, and 365-day windows.
+    - Recency features: days elapsed since previous encounter, previous ED, 
+      previous inpatient, and previous outpatient encounter.
+    - Clinical counts: `hist_condition_count`, `hist_unique_condition_count`, 
+      `hist_active_condition_count`, `hist_chronic_condition_count`.
+    - Medication/Care plan counts: `hist_medication_count`, `hist_medication_diversity`, 
+      `hist_active_medication_count`, `hist_procedure_count`, `hist_unique_procedure_count`, 
+      `hist_careplan_count`.
+
+Q5: Is there a fallback if a patient has missing/incomplete historical data — does 
+    the model handle nulls gracefully or does the pipeline break?
+A5: Yes. The model preprocessing pipeline contains robust fallbacks. In `api.py` and 
+    the scikit-learn `ColumnTransformer` preprocessing steps:
+    - Unseen or missing numeric values are median-imputed (`SimpleImputer(strategy='median')`).
+    - Unseen or missing categorical values are mode-imputed (`SimpleImputer(strategy='most_frequent')`) 
+      and encoded using `OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)`.
+    - Missing keys not in the incoming payload are set to 0 to prevent schema errors.
+
+Q6: Is there any model versioning or monitoring — how would we know if the model's 
+    predictions start drifting over time?
+A6: Currently, model versioning is file-based (e.g. `UC07_SYNTHEA_STEP4_BEST_MODEL.joblib` 
+    in the `models/` directory). Automated drift detection and live metric 
+    monitoring are not built into this prototype. This is a known gap to address for 
+    production.
+
+Q7: Was fairness/bias tested across different patient demographics (age, gender, 
+    race) in the training data?
+A7: Yes. Subgroup metrics were calculated and exported to 
+    `step4_ml_output/evaluation/subgroup_fairness_test.csv`. However, because the 
+    synthetic test set is small (e.g. only 1 positive case in the female subgroup), 
+    the results are descriptive/preliminary and cannot yet support a definitive 
+    fairness conclusion.
+
+--------------------------------------------------------------------------------
+2. RAG
+--------------------------------------------------------------------------------
+
+Q1: How is the knowledge base (7 policy cards) validated as clinically approved — 
+    who signs off on those documents, and how are updates handled?
+A1: In the prototype, these 7 policy cards reside in a static JSON file 
+    (`knowledge/care_navigation_policies.json`). In a production setting, these 
+    cards must be signed off by the clinical compliance committee/Chief Medical Officer. 
+    Updates would be managed via an administrative dashboard and stored in a secure 
+    database, replacing the static local file.
+
+Q2: What happens if TF-based retrieval returns zero relevant matches — is there 
+    a fallback response, or does it silently return nothing?
+A2: If the term frequency score is 0, the retrieval returns an empty list (`[]`). 
+    The system handles this gracefully: `_fallback_answer` still outputs the structured 
+    case facts (safety status, pathway, risk) but leaves the sources list empty. The 
+    system prompt tells the LLM to stick strictly to the structured case if no 
+    excerpts match.
+
+Q3: Is there any evaluation of retrieval quality (precision/recall of retrieved 
+    policies against a test set of queries)?
+A3: No. Due to the small size of the knowledge base (7 policies), no automated RAG 
+    retrieval evaluation suite (such as RAGAS or synthetic QA testing) is implemented.
+
+Q4: Since TF-based matching only catches exact/overlapping terms, are we missing 
+    relevant policies when a Care Manager uses different phrasing (this is where 
+    semantic search would help — is that a known gap)?
+A4: Yes. This is a documented gap (highlighted in `rag_service.py` comments). If a 
+    Care Manager inputs a synonym like "cardiac issues" instead of "chest pain", 
+    pure TF-matching might return zero matches. Moving to dense vector embeddings 
+    (e.g., using pgvector or FAISS) is the planned upgrade path.
+
+Q5: Is retrieved content deduplicated or ranked in case multiple policy cards 
+    overlap in content?
+A5: The policy cards are ranked by a scoring function (sum of overlapping query 
+    terms + tag match weight). They are sorted in descending order of score, with 
+    ties broken by document ID, and limited to the top 4 matches. There is no 
+    semantic deduplication.
+
+--------------------------------------------------------------------------------
+3. LLM Integration
+--------------------------------------------------------------------------------
+
+Q1: Is there prompt injection protection — could a malicious or malformed input 
+    to /llm-extract or /copilot/ask manipulate the LLM into ignoring its system prompt?
+A1: No. Malicious user inputs are sent directly into the prompt templates without 
+    active sanitization, guardrails (e.g. Llama Guard, NeMo Guardrails), or 
+    adversarial input checks. This is a security risk for production.
+
+Q2: Is there any hallucination detection — a way to verify the LLM's explanation 
+    only references facts actually present in the structured case + retrieved policies?
+A2: No. Hallucination detection is not automated in the backend. To mitigate this risk, 
+    the UI places the human Care Manager directly in the loop, requiring manual review 
+    and sign-off for every action.
+
+Q3: What's the latency/cost tradeoff of using GPT-4o-mini live vs a local/open-source 
+    model, and was that considered?
+A3: GPT-4o-mini was chosen because of its sub-second latency and extremely low cost 
+    per token, which fits high-frequency tasks like symptom extraction. Running 
+    a local open-source model (like Llama-3-8B) would require dedicated hosting 
+    infrastructure, introducing significant cold-start/idle costs.
+
+Q4: Is there rate limiting or retry logic if the OpenAI/OpenRouter API times out 
+    or errors mid-request?
+A4: The API requests use a hard timeout (10-20 seconds), but there is no exponential 
+    backoff, retry logic (e.g. tenacity), or rate limiter. If the API fails, the 
+    system gracefully falls back to deterministic rule-based template rendering.
+
+Q5: Is the audit log (copilot_audit) tamper-proof or just a regular SQLite table 
+    anyone with DB access could edit?
+A5: It is a standard SQLite table stored inside `data/appointments.db`. Anyone with 
+    system/DB write access can modify, delete, or insert rows. It is not tamper-proof 
+    or blockchain/ledger-backed.
+
+--------------------------------------------------------------------------------
+4. Safety Gate & Integration
+--------------------------------------------------------------------------------
+
+Q1: Is the Safety Gate rule-based thresholds (like SpO2 < 90) clinically validated/
+    sourced from actual guidelines, or arbitrary?
+A1: Yes, the thresholds are mapped to established clinical acute warning guidelines 
+    such as the National Early Warning Score (NEWS-2) used in emergency triage:
+    - SpO2 < 92% is classified as RED (Severe hypoxia).
+    - SpO2 <= 93% is classified as YELLOW.
+    - Altered mental status (AVPU Voice, Pain, Unresponsive) maps to RED/YELLOW.
+
+Q2: What happens if the ML risk score and Safety Gate disagree in a borderline way 
+    (not full emergency, but elevated risk) — is there a MEDIUM/escalation path 
+    or just RED vs not-RED?
+A2: The Safety Gate returns RED, YELLOW, GREEN, or PENDING. A YELLOW safety warning 
+    (e.g., moderately elevated respiratory rate or mild pain) forces an urgent care 
+    pathway suggestion even if the patient's ML risk score is low, ensuring a 
+    clinical buffer.
+
+Q3: Is there end-to-end testing that simulates the full pipeline (EHR data → ML risk 
+    → Safety Gate → RAG explanation → LLM output) to catch integration bugs?
+A3: Yes. Automated integration tests (`test_e2e.py` and `run_e2e_ui_tests.py`) run 
+    the full sequence — extracting patient details, executing ML risk evaluation, 
+    running Safety Gate checks, pulling RAG context, and verifying output JSONs.
+
+--------------------------------------------------------------------------------
+5. Overall / Production-Readiness
+--------------------------------------------------------------------------------
+
+Q1: Is there logging/observability across the whole pipeline to debug a wrong 
+    prediction after the fact?
+A1: Simple transaction-based SQLite auditing is used (storing inputs, outputs, 
+    action, and rationale). A centralized log aggregator or APM (like OpenTelemetry, 
+    Datadog, or Sentry) is not currently implemented.
+
+Q2: What's the plan for HIPAA/PHI compliance if real patient data (not just 
+    Synthea synthetic data) were used?
+A2: Real patient data deployment requires:
+    - Enforcing encrypted storage (encryption at rest and in transit via TLS 1.3).
+    - Securing a Business Associate Agreement (BAA) with OpenAI/Microsoft Azure.
+    - Enabling detailed IAM access controls and immutable audit trails.
+
+Q3: Is there a documented rollback plan if the LLM or ML component fails in production?
+A3: The code provides implicit safety fallbacks:
+    - If the ML risk model fails, the API falls back to demographic/pre-calculated risk rules.
+    - If the LLM symptom extraction/explanation fails, the system falls back to 
+      local keyword regex extraction and structured rule-based template generators.
+    - This ensures the application remains online and functional.
+================================================================================

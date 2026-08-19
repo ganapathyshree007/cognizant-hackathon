@@ -1,0 +1,71 @@
+{
+  "scope": "Repeat ED use within 90 days; prioritisation only, not triage.",
+  "models_evaluated": [
+    "CatBoost",
+    "XGBoost",
+    "FT-Transformer"
+  ],
+  "audit": {
+    "split_strategy": "chronological: final observed index year=test; prior year=validation",
+    "index_date_ranges": {
+      "train": [
+        "1919-06-06",
+        "2019-12-30"
+      ],
+      "validation": [
+        "2020-01-08",
+        "2020-12-31"
+      ],
+      "test": [
+        "2021-01-01",
+        "2021-08-20"
+      ]
+    },
+    "patient_counts": {
+      "train": 746,
+      "validation": 109,
+      "test": 71
+    },
+    "patient_overlaps": {
+      "train_validation": 72,
+      "train_test": 49,
+      "validation_test": 10
+    },
+    "patient_level_separation": false,
+    "interpretation": "Patients may appear in later time splits; this reflects real repeat-utilisation scoring. Features are strictly pre-index, so later encounters are never included. Do not claim a patient-disjoint generalisation result from this experiment.",
+    "class_distribution": {
+      "train": {
+        "rows": 1833,
+        "positives": 335,
+        "positive_rate": 0.18276
+      },
+      "validation": {
+        "rows": 135,
+        "positives": 25,
+        "positive_rate": 0.18519
+      },
+      "test": {
+        "rows": 87,
+        "positives": 16,
+        "positive_rate": 0.18391
+      }
+    }
+  },
+  "notes": [
+    "Threshold 0.5 is reported for comparison only; choose the operating threshold from validation data with Care Manager capacity and acceptable false-negative risk.",
+    "Synthetic Synthea data and a small 87-row test set limit real-world generalisation and fairness conclusions.",
+    "Rolling validation is chronological and repeatable; it is not patient-disjoint cross-validation.",
+    "TabPFN-3 is excluded only pending one-time external license acceptance."
+  ],
+  "outputs": [
+    "calibration_test.csv",
+    "catboost_feature_importance.csv",
+    "evaluation_report.json",
+    "ft_transformer_feature_importance.csv",
+    "full_metrics_by_split.csv",
+    "rolling_temporal_validation.csv",
+    "subgroup_fairness_test.csv",
+    "threshold_analysis_test.csv",
+    "xgboost_feature_importance.csv"
+  ]
+}

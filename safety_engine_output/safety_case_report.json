@@ -1,9 +1,0 @@
-{
-  "rules_version": "0.1-prototype",
-  "case_count": 2168,
-  "status_counts": {
-    "INSUFFICIENT_CLINICAL_DATA": 1916,
-    "POSSIBLE_EMERGENCY": 252
-  },
-  "clinical_notice": "Prototype-only. These rules require clinician validation and must never autonomously redirect emergency care."
-}

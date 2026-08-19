@@ -1,0 +1,7 @@
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.5
+catboost>=1.2
+torch>=2.3
+tabpfn>=3.0
+xgboost>=2.1

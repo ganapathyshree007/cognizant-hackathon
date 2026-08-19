@@ -31,7 +31,8 @@ The orchestration engine follows a rigorous, multi-step pipeline to guarantee sa
 - Uses **TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)** to dynamically rank providers based on MIPS Quality Scores and Semantic scores, ensuring no hallucinated criteria are used.
 
 ## Directory Structure
-- `/UC07_FINAL_RUNTIME/`: The self-contained core runtime containing the FastAPI backend, active machine learning models, and high-speed read-only SQLite indexes (for FHIR/EHR emulation).
+- `/backend/`: The FastAPI backend containing active machine learning models, local SQLite databases, safety logic, and API endpoints.
+- `/frontend/`: The production frontend application built with TanStack Start, React, and Vite.
 - `/pipeline/`: The independent modules defining logic for Steps 4, 5, 6, and 7.
 - `/scripts/`: Automated build, test, verification, and data-transformation scripts.
 - `/tests/`: Standalone end-to-end and component tests for the various engines.
@@ -41,11 +42,11 @@ The orchestration engine follows a rigorous, multi-step pipeline to guarantee sa
 
 ### Prerequisites
 - Python 3.9+
-- See `UC07_FINAL_RUNTIME/backend/requirements.txt` for exact library dependencies.
+- See `backend/requirements.txt` for exact library dependencies.
 
 ### Running the API
 ```bash
-cd UC07_FINAL_RUNTIME/backend
+cd backend
 python api.py
 ```
 *This launches the FastAPI application, bridging the orchestration pipeline with the frontend or external API gateways.*

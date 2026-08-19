@@ -1,0 +1,95 @@
+{
+  "purpose": "repeat ED utilisation prioritisation; not clinical triage",
+  "target": "a subsequent emergency encounter within 90 days",
+  "point_in_time_policy": "all feature windows end strictly before index_date",
+  "data_quality": {
+    "source": "step4_raw",
+    "rows_before": {
+      "encounters": 61459,
+      "patients": 1163
+    },
+    "rows_after": {
+      "encounters": 61459,
+      "patients": 1163
+    },
+    "invalid_or_missing_encounter_start": 0,
+    "emergency_encounters": 2168,
+    "orphan_encounter_patients": 0,
+    "deduplication": "encounter IDs and patient IDs are unique after cleaning"
+  },
+  "rows": 2055,
+  "positive_rate": 0.18297,
+  "splits": {
+    "train": 1833,
+    "validation": 135,
+    "test": 87
+  },
+  "feature_columns": [
+    "days_since_previous_encounter",
+    "days_since_previous_ed",
+    "all_encounters_30d",
+    "claim_cost_30d",
+    "emergency_30d",
+    "inpatient_30d",
+    "outpatient_30d",
+    "ambulatory_30d",
+    "urgentcare_30d",
+    "wellness_30d",
+    "all_encounters_90d",
+    "claim_cost_90d",
+    "emergency_90d",
+    "inpatient_90d",
+    "outpatient_90d",
+    "ambulatory_90d",
+    "urgentcare_90d",
+    "wellness_90d",
+    "all_encounters_365d",
+    "claim_cost_365d",
+    "emergency_365d",
+    "inpatient_365d",
+    "outpatient_365d",
+    "ambulatory_365d",
+    "urgentcare_365d",
+    "wellness_365d",
+    "gender",
+    "race",
+    "ethnicity",
+    "marital",
+    "state",
+    "age_at_index"
+  ],
+  "categorical_columns": [
+    "gender",
+    "race",
+    "ethnicity",
+    "marital",
+    "state"
+  ],
+  "model_results": [
+    {
+      "model": "CatBoost",
+      "status": "trained",
+      "roc_auc": 0.97711,
+      "pr_auc": 0.95515,
+      "precision_at_0_5": 0.88235,
+      "recall_at_0_5": 0.9375,
+      "f1_at_0_5": 0.90909,
+      "brier_score": 0.07327
+    },
+    {
+      "model": "FT-Transformer",
+      "status": "trained",
+      "roc_auc": 0.96039,
+      "pr_auc": 0.95389,
+      "precision_at_0_5": 0.83333,
+      "recall_at_0_5": 0.9375,
+      "f1_at_0_5": 0.88235,
+      "brier_score": 0.05227
+    },
+    {
+      "model": "TabPFN-3",
+      "status": "not_trained",
+      "reason": "TypeError: boolean value of NA is ambiguous"
+    }
+  ]
+}

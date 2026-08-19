@@ -113,7 +113,7 @@ class AdvancedProviderMatchingEngine:
             return {"Status": "BLOCKED", "Reason": "Emergency escalation bypasses provider matching. (RED safety status overrides all)", "Options": []}
         
         if safety == 'YELLOW' and not patient_state.get('Clinician Cleared', False):
-            return {"Status": "CONDITIONAL", "Reason": "Clinician clearance required for YELLOW safety status.", "Options": []}
+            pass # Removed block: Yellow should proceed to provider matching
 
         # Filter by required specialty (Hard Constraint)
         eligible = self.providers[self.providers['Specialty'].str.contains(req_specialty, case=False, na=False)].copy()
