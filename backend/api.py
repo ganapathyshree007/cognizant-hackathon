@@ -68,6 +68,24 @@ def init_services():
     except Exception as e:
         print(f"Error loading Safety Gate: {e}")
 
+    # 3. Supabase Diagnostic
+    supabase_url = os.environ.get("SUPABASE_URL")
+    supabase_key = os.environ.get("SUPABASE_SERVICE_KEY")
+    print(f"Supabase URL: {supabase_url is not None} ({supabase_url[:25] if supabase_url else 'None'}...)")
+    print(f"Supabase Key: {supabase_key is not None}")
+    if supabase_url and supabase_key:
+        try:
+            from database import get_supabase
+            client = get_supabase()
+            if client:
+                res = client.table("backend_files").select("PATIENT_ID", count="exact").limit(1).execute()
+                # Postgrest response count depends on package version. Let's check how to print count
+                print(f"Supabase connection test: backend_files query completed. Response data length: {len(res.data) if res.data else 0}")
+            else:
+                print("Supabase client is None")
+        except Exception as e:
+            print(f"Supabase connection test failed: {e}")
+
 def init_db():
     db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/appointments.db'))
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
