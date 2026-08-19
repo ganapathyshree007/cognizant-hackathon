@@ -9,6 +9,7 @@ import {
 
 import { useState, useEffect } from "react";
 import { useAuth } from "./__root";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/analytics")({
   head: () => ({ meta: [{ title: "Management Analytics — CarePath" }] }),
@@ -77,7 +78,7 @@ function AnalyticsPage() {
     const fetchAnalytics = async () => {
       try {
         const token = session?.access_token || "mock-token-123";
-        const res = await fetch("/api/dashboard/real-analytics", {
+        const res = await fetch(apiUrl("/api/dashboard/real-analytics"), {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {

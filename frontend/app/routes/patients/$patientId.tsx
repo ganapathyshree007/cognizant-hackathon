@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "../__root";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/patients/$patientId")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -53,7 +54,7 @@ function PatientProfile() {
     setBookSubmitting(true);
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch('/api/appointments', {
+      const response = await fetch(apiUrl('/api/appointments'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -86,7 +87,7 @@ function PatientProfile() {
   const fetchPatientDetails = async () => {
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch(`/api/patients/${patientId}`, {
+      const response = await fetch(apiUrl(`/api/patients/${patientId}`), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -102,7 +103,7 @@ function PatientProfile() {
   const fetchAppointments = async () => {
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch(`/api/appointments/${patientId}`, {
+      const response = await fetch(apiUrl(`/api/appointments/${patientId}`), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -121,7 +122,7 @@ function PatientProfile() {
     setRiskError(null);
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch('/api/evaluate', {
+      const response = await fetch(apiUrl('/api/evaluate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ patient_id: patientId, encounter_id: encounterId, clinical_context: {} })
@@ -168,13 +169,13 @@ function PatientProfile() {
   const saveStatus = async (apptId: string, status: string, notes?: string) => {
     try {
       const token = session?.access_token || "mock-token-123";
-      await fetch(`/api/appointments/${apptId}`, {
+      await fetch(apiUrl(`/api/appointments/${apptId}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
       });
       if (notes && outcomeAppt) {
-        await fetch('/api/outcomes', {
+        await fetch(apiUrl('/api/outcomes'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({

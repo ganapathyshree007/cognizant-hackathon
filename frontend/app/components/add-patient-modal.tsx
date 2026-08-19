@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAuth } from "../routes/__root";
+import { apiUrl } from "@/lib/api";
 
 interface AddPatientModalProps {
   open: boolean;
@@ -100,7 +101,7 @@ export function AddPatientModal({ open, onOpenChange, onPatientAdded }: AddPatie
         }
       };
 
-      const response = await fetch("/api/patients", {
+      const response = await fetch(apiUrl("/api/patients"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAuth } from "./__root";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/follow-ups")({
   head: () => ({ meta: [{ title: "Appointments & Follow-ups — CarePath" }] }),
@@ -31,7 +32,7 @@ function AppointmentsPage() {
     setLoading(true);
     try {
       const token = session?.access_token || "mock-token-123";
-      const res = await fetch('/api/appointments', {
+      const res = await fetch(apiUrl('/api/appointments'), {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -77,7 +78,7 @@ function AppointmentsPage() {
         body.appointment_date = date;
         body.appointment_time = time;
       }
-      await fetch(`/api/appointments/${apptId}`, {
+      await fetch(apiUrl(`/api/appointments/${apptId}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(body)

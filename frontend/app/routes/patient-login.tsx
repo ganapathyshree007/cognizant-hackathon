@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ShieldCheck, ArrowRight, ActivitySquare, HeartPulse } from "lucide-react";
 import { useAuth } from "./__root";
 import { supabase } from "@/lib/supabase";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/patient-login")({
   component: PatientLogin,
@@ -31,7 +32,7 @@ function PatientLogin() {
     setError("");
 
     try {
-      const res = await fetch("/api/patient/login", {
+      const res = await fetch(apiUrl("/api/patient/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ patient_id: patientId.trim() })

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Calendar, User, Activity, Clock, ShieldCheck, HeartPulse } from "lucide-react";
 import { useAuth } from "./__root";
 import * as Dialog from "@radix-ui/react-dialog";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/my-care")({
   head: () => ({
@@ -30,12 +31,12 @@ function PatientDashboard() {
     try {
       if (!patientToken) return;
 
-      const profileRes = await fetch("/api/patient/profile", {
+      const profileRes = await fetch(apiUrl("/api/patient/profile"), {
         headers: { "Authorization": `Bearer patient-${patientToken}` }
       });
       if (profileRes.ok) setProfile(await profileRes.json());
 
-      const apptsRes = await fetch("/api/patient/appointments", {
+      const apptsRes = await fetch(apiUrl("/api/patient/appointments"), {
         headers: { "Authorization": `Bearer patient-${patientToken}` }
       });
       if (apptsRes.ok) {
@@ -57,7 +58,7 @@ function PatientDashboard() {
   const handleReschedule = async () => {
     if (!selectedAppt || !newDate || !newTime) return;
     try {
-      await fetch(`/api/patient/appointments/${selectedAppt.appointment_id}/reschedule`, {
+      await fetch(apiUrl(`/api/patient/appointments/${selectedAppt.appointment_id}/reschedule`), {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -75,7 +76,7 @@ function PatientDashboard() {
   const handleCancel = async () => {
     if (!selectedAppt) return;
     try {
-      await fetch(`/api/patient/appointments/${selectedAppt.appointment_id}/cancel`, {
+      await fetch(apiUrl(`/api/patient/appointments/${selectedAppt.appointment_id}/cancel`), {
         method: "POST",
         headers: { "Authorization": `Bearer patient-${patientToken}` }
       });

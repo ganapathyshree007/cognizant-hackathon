@@ -6,6 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "./__root";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/")({
   component: DashboardOverview,
@@ -54,7 +55,7 @@ function DashboardOverview() {
         const token = session?.access_token || "mock-token-123";
         
         // 1. Stats
-        const resStats = await fetch('/api/dashboard/stats', {
+        const resStats = await fetch(apiUrl('/api/dashboard/stats'), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (resStats.ok) {
@@ -70,7 +71,7 @@ function DashboardOverview() {
         }
 
         // 2. Real Analytics for Charts
-        const resAnalytics = await fetch('/api/dashboard/real-analytics', {
+        const resAnalytics = await fetch(apiUrl('/api/dashboard/real-analytics'), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (resAnalytics.ok) {
@@ -82,7 +83,7 @@ function DashboardOverview() {
         }
 
         // 3. Priority Patients
-        const resPatients = await fetch('/api/patients/search', {
+        const resPatients = await fetch(apiUrl('/api/patients/search'), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (resPatients.ok) {

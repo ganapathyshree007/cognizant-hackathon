@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "./__root";
+import { apiUrl } from "@/lib/api";
 
 type ProviderSearch = { care?: CareType | "All" };
 
@@ -51,7 +52,7 @@ function ProvidersPage() {
       setLoading(true);
       try {
         const token = session?.access_token || "mock-token-123";
-        const response = await fetch(`/api/providers?page=${page}&limit=${limit}&care=${encodeURIComponent(care)}`, {
+        const response = await fetch(apiUrl(`/api/providers?page=${page}&limit=${limit}&care=${encodeURIComponent(care)}`), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {

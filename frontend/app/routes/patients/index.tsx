@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "../__root";
 import { AddPatientModal } from "@/components/add-patient-modal";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/patients/")({
   head: () => ({
@@ -43,7 +44,7 @@ function PatientsPage() {
     setLoading(true);
     try {
       const token = session?.access_token || "mock-token-123";
-      const res = await fetch(`/api/patients/search?query=${encodeURIComponent(query)}`, {
+      const res = await fetch(apiUrl(`/api/patients/search?query=${encodeURIComponent(query)}`), {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (res.ok) {

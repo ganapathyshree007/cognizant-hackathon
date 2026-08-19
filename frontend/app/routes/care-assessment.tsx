@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { AddPatientModal } from "@/components/add-patient-modal";
 import { toast } from "sonner";
 import { useAuth } from "./__root";
+import { apiUrl } from "@/lib/api";
 
 type SearchParams = { patientId?: string; encounterId?: string; };
 
@@ -92,7 +93,7 @@ function CareAssessmentPage() {
         setPickerLoading(true);
         try {
           const token = session?.access_token || "mock-token-123";
-          const res = await fetch(`/api/patients/search?query=${encodeURIComponent(pickerSearch)}`, {
+          const res = await fetch(apiUrl(`/api/patients/search?query=${encodeURIComponent(pickerSearch)}`), {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (res.ok) {
@@ -128,7 +129,7 @@ function CareAssessmentPage() {
     }
     
     try {
-      const response = await fetch('/api/evaluate', {
+      const response = await fetch(apiUrl('/api/evaluate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ patient_id: pid, encounter_id: eid || "UNKNOWN", clinical_context: contextToSend })
@@ -160,7 +161,7 @@ function CareAssessmentPage() {
   const fetchExplanation = async (resultData: any, contextToSend: any) => {
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch('/api/explain', {
+      const response = await fetch(apiUrl('/api/explain'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -192,7 +193,7 @@ function CareAssessmentPage() {
     setProcessingSymptoms(true);
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch('/api/symptoms/llm-extract', {
+      const response = await fetch(apiUrl('/api/symptoms/llm-extract'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ symptoms: symptomsText })
@@ -230,7 +231,7 @@ function CareAssessmentPage() {
     }
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch('/api/audit', {
+      const response = await fetch(apiUrl('/api/audit'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -261,7 +262,7 @@ function CareAssessmentPage() {
     const provider = data.step7.Options[apptForm.selectedProviderIndex];
     try {
       const token = session?.access_token || "mock-token-123";
-      const response = await fetch('/api/appointments', {
+      const response = await fetch(apiUrl('/api/appointments'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -466,7 +467,7 @@ function CareAssessmentPage() {
       {error && (
         <div className="mb-6 flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
           <AlertTriangle className="size-5 shrink-0" />
-          <span>{error.message || JSON.stringify(error)}</span>
+          <span>{error.message || (typeof error === 'string' ? error : (error.detail || JSON.stringify(error)))}</span>
         </div>
       )}
       
