@@ -1,30 +1,30 @@
 # AURA UC07 - Care Manager Orchestration Engine
 
-## Overview :
+## Overview 
 **AURA UC07** is a comprehensive, end-to-end Care Manager Orchestration system built to seamlessly process patient data, assess risk, enforce clinical safety rules, determine care pathways, and dynamically match patients with the optimal healthcare providers.    
 
 The engine replaces manual, fragmented patient intake systems with a streamlined, multi-step pipeline powered by machine learning and multi-criteria decision algorithms.
 
-## Architecture :
+## Architecture 
 
 The orchestration engine follows a rigorous, multi-step pipeline to guarantee safety, determinism, and explainability:
 
-### Step 4: Historical Risk Stratification :
+### Step 4: Historical Risk Stratification 
 - Evaluates a patient's historical medical context (diagnoses, claims, past encounters).
 - Uses a machine learning model (`joblib`) trained on Synthea data to predict a comprehensive Risk Band.
 
-### Step 5: Clinical Safety Gate :
+### Step 5: Clinical Safety Gate 
 - Assesses the patient's immediate, current context (e.g., live symptoms).
 - Enforces hard safety filters, yielding a definitive status:
   - `GREEN` (Safe to proceed)
   - `YELLOW` (Requires conditional clinician clearance)
   - `RED` (Emergency intervention block)
 
-### Step 6: Care Pathway Decision Matrix :
+### Step 6: Care Pathway Decision Matrix 
 - If cleared by the Safety Gate, patients are dynamically routed to specific clinical pathways (e.g., P1, P2, ... P5).
 - Ensures that patients are only funneled to appropriate clinical programs matching their symptoms and historical risk.
 
-### Step 7: Advanced Provider Matching :
+### Step 7: Advanced Provider Matching 
 - **Hybrid Retrieval + Semantic Similarity + TOPSIS Ranking**
 - Retrieves verified providers from the Cognizant Provider Master dataset.
 - Evaluates **Semantic Compatibility** (mapping patient clinical needs via TF-IDF cosine similarity to provider specialties).
