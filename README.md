@@ -1,7 +1,7 @@
 # AURA UC07 - Care Manager Orchestration Engine
 
 ## Overview
-**AURA UC07** is a comprehensive, end-to-end Care Manager Orchestration system built to seamlessly process patient data, assess risk, enforce clinical safety rules, determine care pathways, and dynamically match patients with the optimal healthcare providers.
+**AURA UC07** is a comprehensive, end-to-end Care Manager Orchestration system built to seamlessly process patient data, assess risk, enforce clinical safety rules, determine care pathways, and dynamically match patients with the optimal healthcare providers.    
 
 The engine replaces manual, fragmented patient intake systems with a streamlined, multi-step pipeline powered by machine learning and multi-criteria decision algorithms.
 
