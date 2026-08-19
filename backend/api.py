@@ -523,6 +523,17 @@ def evaluate_patient(req: PatientEvalRequest, user: dict = Depends(get_current_u
         "step7": provider_result
     }
 
+@app.get("/api/diagnostic-env")
+def diagnostic_env():
+    import os
+    url = os.environ.get("SUPABASE_URL", "NOT_SET")
+    key = os.environ.get("SUPABASE_SERVICE_KEY", "NOT_SET")
+    return {
+        "supabase_url": url,
+        "supabase_key_length": len(key) if key != "NOT_SET" else 0,
+        "supabase_url_domain": url.split("//")[-1].split(".")[0] if url != "NOT_SET" else "None"
+    }
+
 @app.post("/api/audit")
 def submit_audit(req: DecisionAuditRequest, user: dict = Depends(require_care_manager)):
     supabase = get_supabase()
