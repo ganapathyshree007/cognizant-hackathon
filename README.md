@@ -9,6 +9,18 @@ The engine replaces manual, fragmented patient intake systems with a streamlined
 
 The orchestration engine follows a rigorous, multi-step pipeline to guarantee safety, determinism, and explainability:
 
+### Step 1: Patient Data Ingestion 
+- Ingests raw patient records from the Synthea EHR dataset, including demographics, encounters, conditions, medications, procedures, and prior ED utilization.
+- Consolidates multiple relational EHR tables into a unified patient-level view for downstream processing.
+
+### Step 2: Data Validation & Preprocessing 
+- Validates incoming patient and encounter data for completeness, correct structure, and type consistency before it enters the pipeline.
+- Handles missing values, normalizes formats, and flags malformed records to prevent silent failures further down the pipeline.
+
+### Step 3: Feature Engineering 
+- Transforms validated raw EHR data into **44 finalized historical features**, capturing utilization patterns, chronic condition burden, encounter recency, and prior ED visit frequency.
+- Produces a consistent, model-ready feature schema that is validated against the exact structure the trained model expects at inference time.
+
 ### Step 4: Historical Risk Stratification 
 - Evaluates a patient's historical medical context (diagnoses, claims, past encounters).
 - Uses a machine learning model (`joblib`) trained on Synthea data to predict a comprehensive Risk Band.
